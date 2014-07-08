@@ -11,25 +11,9 @@ import org.apache.log4j.Logger;
  * Class formatting input stream and returning result into output stream
  */
 public class CodeFormatter {
-    Logger logger = Logger.getLogger(CodeFormatter.class);
-    private int nestingLevel = 0;
-    private char symbol = 0;
+    private Logger logger = Logger.getLogger(CodeFormatter.class);
 
     public CodeFormatter() {
-    }
-
-    /**
-     * Increases code nesting level
-     */
-    private void increaseNesting() {
-        nestingLevel++;
-    }
-
-    /**
-     * Reduces code nesting level
-     */
-    private void reduceNesting() throws FormatterException {
-        nestingLevel--;
     }
 
     /**
@@ -38,7 +22,7 @@ public class CodeFormatter {
      * @throws it.sevenbits.Exceptions.FormatterException - nesting level < 0 so code have more close brackets
      *                                                    then open brackets.
      */
-    private void inputCloseBracketValidator() throws FormatterException {
+    private void inputCloseBracketValidator(final int nestingLevel) throws FormatterException {
         if (nestingLevel < 0) {
             throw new FormatterException("Close brackets more then open brackets, invalid code on input stream. ");
         }
@@ -50,7 +34,7 @@ public class CodeFormatter {
      * @throws it.sevenbits.Exceptions.FormatterException - nesting level > 0 so code have more close brackets
      *                                                    then open brackets.
      */
-    private void inputOpenBracketValidator() throws FormatterException {
+    private void inputOpenBracketValidator(final int nestingLevel) throws FormatterException {
         if (nestingLevel > 0) {
             throw new FormatterException("Open brackets more then close brackets, invalid code on input stream. ");
         }
@@ -61,14 +45,14 @@ public class CodeFormatter {
      *
      * @param destination - Output stream, inclusive formatted code
      */
-    private void shiftNextString(OutStream destination, FormatOptions formatOptions) throws StreamException {
+    private void shiftNextString(final OutStream destination, final FormatOptions formatOptions, final int nestingLevel) throws FormatterException {
         try {
             destination.writeSymbol(formatOptions.getSymbolEndOfString());
             for (int i = 0; i < formatOptions.getIndent() * nestingLevel; i++) {
                 destination.writeSymbol(formatOptions.getTabSymbol());
             }
         } catch (StreamException e) {
-            throw e;
+            throw new FormatterException(e.getMessage());
         }
     }
 
@@ -78,65 +62,62 @@ public class CodeFormatter {
      *
      * @param source      - Input stream, inclusive unformatted code
      * @param destination - Output stream, inclusive formatted code
-     * @throws it.sevenbits.Exceptions.StreamException
+     * @throws it.sevenbits.Exceptions.FormatterException
      */
-    public void format(InStream source, OutStream destination, FormatOptions formatOptions) throws FormatterException {
+    public void format(final InStream source, final OutStream destination, final FormatOptions formatOptions) throws FormatterException {
         boolean isNewString = false;
         boolean isAloneSpaceButton = false;
+        int nestingLevel = 0;
+        char symbol;
         try {
             while (!source.isEnd()) {
-                if (logger.isEnabledFor(Level.DEBUG))
+                if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug("Read symbol from stream. ");
+                }
                 symbol = source.readSymbol();
                 switch (symbol) {
-                    case '{': {
+                    case '{':
                         destination.writeSymbol(symbol);
                         isNewString = true;
-                        increaseNesting();
-                        shiftNextString(destination, formatOptions);
+                        nestingLevel++;
+                        shiftNextString(destination, formatOptions, nestingLevel);
                         break;
-                    }
-                    case '}': {
+                    case '}':
                         isNewString = true;
-                        reduceNesting();
-                        inputCloseBracketValidator();
-                        shiftNextString(destination, formatOptions);
+                        nestingLevel--;
+                        inputCloseBracketValidator(nestingLevel);
+                        shiftNextString(destination, formatOptions, nestingLevel);
                         destination.writeSymbol(symbol);
                         break;
-                    }
-                    case ';': {
+                    case ';':
                         destination.writeSymbol(symbol);
                         isNewString = true;
-                        shiftNextString(destination, formatOptions);
+                        shiftNextString(destination, formatOptions, nestingLevel);
                         break;
-                    }
-                    case ' ': {
+                    case ' ':
                         if (!isNewString) {
                             if (isAloneSpaceButton) {
                                 isAloneSpaceButton = false;
                                 destination.writeSymbol(symbol);
                             }
+                            break;
                         }
+                    case '\n':
                         break;
-                    }
-                    case '\n': {
-                        break;
-                    }
-                    default: {
+                    default:
                         isNewString = false;
                         isAloneSpaceButton = true;
                         destination.writeSymbol(symbol);
                         break;
-                    }
                 }
-                if (logger.isEnabledFor(Level.DEBUG))
+                if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug("Symbol parsed. ");
+                }
             }
             source.close();
             destination.close();
-            inputOpenBracketValidator();
+            inputOpenBracketValidator(nestingLevel);
         } catch (StreamException e) {
-
             throw new FormatterException(e.getMessage());
         } catch (FormatterException e) {
             throw new FormatterException(e.getMessage());

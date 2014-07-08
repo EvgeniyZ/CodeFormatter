@@ -5,7 +5,7 @@ package it.sevenbits.Exceptions;
  */
 public class FormatterException extends Exception {
 
-    public FormatterException(String msg) {
+    public FormatterException(final String msg) {
         super(msg);
     }
 

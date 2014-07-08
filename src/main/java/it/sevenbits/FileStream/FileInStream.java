@@ -11,7 +11,7 @@ import java.io.IOException;
  * Class implements input stream as FileInputStream and read from this stream
  */
 public class FileInStream implements InStream {
-    FileInputStream reader;
+    private FileInputStream reader;
 
     public FileInStream() {
     }
@@ -21,7 +21,7 @@ public class FileInStream implements InStream {
      *
      * @throws it.sevenbits.Exceptions.StreamException
      */
-    public FileInStream(String fileName) throws StreamException {
+    public FileInStream(final String fileName) throws StreamException {
         try {
             reader = new FileInputStream(fileName);
         } catch (FileNotFoundException e) {
@@ -47,10 +47,7 @@ public class FileInStream implements InStream {
     @Override
     public boolean isEnd() throws StreamException {
         try {
-            if (reader.available() == 0)
-                return true;
-            else
-                return false;
+            return reader.available() == 0;
         } catch (IOException e) {
             throw new StreamException("Can't find end of file. ");
         }

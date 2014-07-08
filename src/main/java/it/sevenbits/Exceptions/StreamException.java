@@ -5,7 +5,7 @@ package it.sevenbits.Exceptions;
  */
 public class StreamException extends Exception {
 
-    public StreamException(String msg) {
+    public StreamException(final String msg) {
         super(msg);
     }
 

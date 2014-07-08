@@ -3,28 +3,30 @@ package it.sevenbits.codeFormatter;
 /**
  * Class have information about format options
  * <p/>
- * if false - '\t' if true - ''
+ * if false - '\t' if true - ' '
  */
 public class FormatOptions {
     private int indentSize;
     private char symbolEndOfString;
     private char tabSymbol;
+    private static final int STANDART_INDENT_SIZE = 4;
 
     public FormatOptions() {
         setDefaultParam();
     }
 
-    public FormatOptions(int indentSize, boolean useSpaces) {
+    public FormatOptions(final int indentSize, final boolean useSpaces) {
         this.indentSize = indentSize;
         this.symbolEndOfString = '\n';
-        if (useSpaces)
+        if (useSpaces) {
             this.tabSymbol = ' ';
-        else
+        } else {
             this.tabSymbol = '\t';
+        }
     }
 
     private void setDefaultParam() {
-        indentSize = 4;
+        indentSize = STANDART_INDENT_SIZE;
         symbolEndOfString = '\n';
         tabSymbol = ' ';
     }
@@ -49,7 +51,7 @@ public class FormatOptions {
         tabSymbol = ' ';
     }
 
-    public void setIndentSize(int count) {
+    public void setIndentSize(final int count) {
         indentSize = count;
     }
 }
