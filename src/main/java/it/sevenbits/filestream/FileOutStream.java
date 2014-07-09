@@ -1,6 +1,6 @@
-package it.sevenbits.FileStream;
+package it.sevenbits.filestream;
 
-import it.sevenbits.Exceptions.StreamException;
+import it.sevenbits.exceptions.StreamException;
 import it.sevenbits.IStream.OutStream;
 
 import java.io.FileNotFoundException;
@@ -11,15 +11,16 @@ import java.io.IOException;
  * Class implements output stream as FileOutputStream and write to current stream
  */
 public class FileOutStream implements OutStream {
-    private FileOutputStream writer;
 
-    public FileOutStream() {
-    }
+    /**
+     * Output stream
+     * */
+    private FileOutputStream writer;
 
     /**
      * Constructor FileInStream
      *
-     * @throws it.sevenbits.Exceptions.StreamException
+     * @throws it.sevenbits.exceptions.StreamException
      */
     public FileOutStream(final String fileName) throws StreamException {
         try {
@@ -35,7 +36,7 @@ public class FileOutStream implements OutStream {
      * @see it.sevenbits.IStream.OutStream#writeSymbol(char)
      */
     @Override
-    public void writeSymbol(final char symbol) throws StreamException {
+    public final void writeSymbol(final char symbol) throws StreamException {
         try {
             writer.write(symbol);
         } catch (IOException e) {
@@ -47,7 +48,7 @@ public class FileOutStream implements OutStream {
      * @see it.sevenbits.IStream.OutStream#close()
      */
     @Override
-    public void close() throws StreamException {
+    public final void close() throws StreamException {
         try {
             writer.close();
         } catch (IOException e) {

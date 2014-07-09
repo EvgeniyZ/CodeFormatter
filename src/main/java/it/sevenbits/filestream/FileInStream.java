@@ -1,6 +1,6 @@
-package it.sevenbits.FileStream;
+package it.sevenbits.filestream;
 
-import it.sevenbits.Exceptions.StreamException;
+import it.sevenbits.exceptions.StreamException;
 import it.sevenbits.IStream.InStream;
 
 import java.io.FileInputStream;
@@ -11,15 +11,17 @@ import java.io.IOException;
  * Class implements input stream as FileInputStream and read from this stream
  */
 public class FileInStream implements InStream {
-    private FileInputStream reader;
 
-    public FileInStream() {
-    }
+    /**
+     * Input stream
+     * */
+    private FileInputStream reader;
 
     /**
      * Constructor FileInStream
      *
-     * @throws it.sevenbits.Exceptions.StreamException
+     * @param fileName - Name of file to open in stream
+     * @throws it.sevenbits.exceptions.StreamException
      */
     public FileInStream(final String fileName) throws StreamException {
         try {
@@ -30,10 +32,11 @@ public class FileInStream implements InStream {
     }
 
     /**
+     * @throws it.sevenbits.exceptions.StreamException
      * @see it.sevenbits.IStream.InStream#readSymbol()
      */
     @Override
-    public char readSymbol() throws StreamException {
+    public final char readSymbol() throws StreamException {
         try {
             return (char) reader.read();
         } catch (IOException e) {
@@ -42,10 +45,11 @@ public class FileInStream implements InStream {
     }
 
     /**
+     * @throws it.sevenbits.exceptions.StreamException
      * @see it.sevenbits.IStream.InStream#isEnd()
      */
     @Override
-    public boolean isEnd() throws StreamException {
+    public final boolean isEnd() throws StreamException {
         try {
             return reader.available() == 0;
         } catch (IOException e) {
@@ -54,10 +58,11 @@ public class FileInStream implements InStream {
     }
 
     /**
+     * @throws it.sevenbits.exceptions.StreamException
      * @see it.sevenbits.IStream.InStream#close()
      */
     @Override
-    public void close() throws StreamException {
+    public final void close() throws StreamException {
         try {
             reader.close();
         } catch (IOException e) {

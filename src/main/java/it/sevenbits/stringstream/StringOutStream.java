@@ -1,22 +1,29 @@
-package it.sevenbits.StringStream;
+package it.sevenbits.stringstream;
 
-import it.sevenbits.Exceptions.StreamException;
+import it.sevenbits.exceptions.StreamException;
 import it.sevenbits.IStream.OutStream;
 
 /**
  * Class implements output stream as StringBuffer and write to current stream
  */
 public class StringOutStream implements OutStream {
-    StringBuffer stringBuffer;
 
-    public StringOutStream() {
-    }
+    /**
+     *
+     * */
+    private StringBuffer stringBuffer;
 
-    public StringOutStream(String outputString) {
+    /**
+     *
+     * */
+    public StringOutStream(final String outputString) {
         stringBuffer = new StringBuffer(outputString);
     }
 
-    public String getString() {
+    /**
+     *
+     * */
+    public final String getString() {
         return stringBuffer.toString();
     }
 
@@ -24,7 +31,7 @@ public class StringOutStream implements OutStream {
      * @see it.sevenbits.IStream.OutStream#writeSymbol(char symbol)
      */
     @Override
-    public void writeSymbol(char symbol) throws StreamException {
+    public final void writeSymbol(final char symbol) throws StreamException {
         stringBuffer.append(symbol);
     }
 
