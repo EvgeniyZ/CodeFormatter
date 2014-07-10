@@ -9,19 +9,19 @@ import it.sevenbits.IStream.OutStream;
 public class StringOutStream implements OutStream {
 
     /**
-     *
+     * Output stream based on string buffer
      * */
     private StringBuffer stringBuffer;
 
     /**
-     *
+     * Creates stream from string
      * */
     public StringOutStream(final String outputString) {
         stringBuffer = new StringBuffer(outputString);
     }
 
     /**
-     *
+     * Get string from output string buffer
      * */
     public final String getString() {
         return stringBuffer.toString();

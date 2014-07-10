@@ -5,28 +5,28 @@ import it.sevenbits.IStream.InStream;
 
 /**
  * Class implements input stream as StringBuffer and read from this stream
- * <p/>
+ *
  * currentPosition - current currentPosition in string
  */
 public class StringInStream implements InStream {
 
     /**
-     *
+     * Input stream based on string buffer
      * */
     private StringBuffer stringBuffer;
 
     /**
-     *
+     * Current position in string buffer stream
      * */
-    private int currentPosition;
+    private int currentPosition = 0;
 
     /**
-     *
+     * Default stream
      * */
     public StringInStream() {}
 
     /**
-     *
+     * Creates stream from string
      * */
     public StringInStream(final String inputString) {
         stringBuffer = new StringBuffer(inputString);
@@ -34,7 +34,8 @@ public class StringInStream implements InStream {
     }
 
     /**
-     *
+     * Get string from input string buffer
+     * @return string
      * */
     public final String getString() {
         return stringBuffer.toString();

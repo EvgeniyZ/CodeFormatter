@@ -1,5 +1,6 @@
 package it.sevenbits.formatter;
 
+import it.sevenbits.exceptions.StreamException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -45,7 +46,7 @@ public class FormatOptions {
      *
      * @param configName Name of file includes config parameters for formatter
      */
-    public FormatOptions(final String configName) {
+    public FormatOptions(final String configName) throws StreamException {
         Logger logger = Logger.getLogger(FormatOptions.class.getName());
         Properties properties = new Properties();
         try {
@@ -56,6 +57,7 @@ public class FormatOptions {
             if (logger.isEnabledFor(Level.WARN))
                 logger.warn(ex.getMessage());
             setDefaultParam();
+            throw new StreamException(ex.getMessage());
         } catch (IOException ex) {
             if (logger.isEnabledFor(Level.WARN))
                 logger.warn(ex.getMessage());
@@ -63,18 +65,24 @@ public class FormatOptions {
     }
 
     /**
+     * Get indent size
+     * @return int
      * */
     public final int getIndent() {
         return indentSize;
     }
 
     /**
+     * Get tab symbol
+     * @return char
      * */
     public final char getTabSymbol() {
         return tabSymbol;
     }
 
     /**
+     * Get symbol end of string
+     * @return char
      * */
     public final char getSymbolEndOfString() {
         return symbolEndOfString;

@@ -6,14 +6,14 @@ package it.sevenbits.exceptions;
 public class FormatterException extends Exception {
 
     /**
-     *
+     * Creates formatter exception from error message
      * */
     public FormatterException(final String msg) {
         super(msg);
     }
 
     /**
-     *
+     * Default constructor for exception
      * */
     public FormatterException() {
     }

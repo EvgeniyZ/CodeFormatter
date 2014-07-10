@@ -6,14 +6,14 @@ package it.sevenbits.exceptions;
 public class NotEnoughBracketsException extends Exception {
 
     /**
-     *
+     * Creates not enough bracket from error message
      * */
     public NotEnoughBracketsException(final String msg) {
         super(msg);
     }
 
     /**
-     *
+     * Default constructor for exception
      * */
     public NotEnoughBracketsException() {
     }

@@ -9,8 +9,8 @@ public interface InStream {
     /**
      * Reads a symbol from stream
      *
-     * @return the next symbol code or -1 if stream out of data
-     * @throws it.sevenbits.exceptions.StreamException
+     * @return char the next symbol code or -1 if stream out of data
+     * @throws it.sevenbits.exceptions.StreamException     *
      */
     char readSymbol() throws StreamException;
 

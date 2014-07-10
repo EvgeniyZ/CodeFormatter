@@ -34,6 +34,7 @@ public class FileInStream implements InStream {
     /**
      * @throws it.sevenbits.exceptions.StreamException
      * @see it.sevenbits.IStream.InStream#readSymbol()
+     * @return char
      */
     @Override
     public final char readSymbol() throws StreamException {
@@ -47,6 +48,7 @@ public class FileInStream implements InStream {
     /**
      * @throws it.sevenbits.exceptions.StreamException
      * @see it.sevenbits.IStream.InStream#isEnd()
+     * @return boolean
      */
     @Override
     public final boolean isEnd() throws StreamException {
