@@ -21,11 +21,13 @@ public final class Main {
     private Logger logger = Logger.getLogger(Main.class.getName());
 
     /**
-     * */
+     * User properties for formatter
+     */
     private static final String DEFAULT_FORMATTER_PROPERTIES = "formatter.properties";
 
     /**
-     * */
+     * Default path to output file if user don't entered output file path
+     */
     private static final String DEFAULT_OUTPUT_PATH = "output";
 
     /**
