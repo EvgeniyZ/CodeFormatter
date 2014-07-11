@@ -53,6 +53,7 @@ public class FormatOptions {
             properties.load(new FileInputStream(configName));
             tabSymbol = properties.getProperty("indentChar").charAt(1);
             indentSize = Integer.parseInt(properties.getProperty("indentLength"));
+            symbolEndOfString = '\n';
         } catch (FileNotFoundException ex) {
             if (logger.isEnabledFor(Level.WARN))
                 logger.warn(ex.getMessage());
@@ -66,24 +67,27 @@ public class FormatOptions {
 
     /**
      * Get indent size
+     *
      * @return int
-     * */
+     */
     public final int getIndent() {
         return indentSize;
     }
 
     /**
      * Get tab symbol
+     *
      * @return char
-     * */
+     */
     public final char getTabSymbol() {
         return tabSymbol;
     }
 
     /**
      * Get symbol end of string
+     *
      * @return char
-     * */
+     */
     public final char getSymbolEndOfString() {
         return symbolEndOfString;
     }

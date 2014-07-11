@@ -1,33 +1,34 @@
 package it.sevenbits.stringstream;
 
 import it.sevenbits.exceptions.StreamException;
-import it.sevenbits.IStream.InStream;
+import it.sevenbits.streams.InStream;
 
 /**
  * Class implements input stream as StringBuffer and read from this stream
- *
+ * <p/>
  * currentPosition - current currentPosition in string
  */
 public class StringInStream implements InStream {
 
     /**
      * Input stream based on string buffer
-     * */
+     */
     private StringBuffer stringBuffer;
 
     /**
      * Current position in string buffer stream
-     * */
+     */
     private int currentPosition = 0;
 
     /**
      * Default stream
-     * */
-    public StringInStream() {}
+     */
+    public StringInStream() {
+    }
 
     /**
      * Creates stream from string
-     * */
+     */
     public StringInStream(final String inputString) {
         stringBuffer = new StringBuffer(inputString);
         currentPosition = 0;
@@ -35,14 +36,15 @@ public class StringInStream implements InStream {
 
     /**
      * Get string from input string buffer
+     *
      * @return string
-     * */
+     */
     public final String getString() {
         return stringBuffer.toString();
     }
 
     /**
-     * @see it.sevenbits.IStream.InStream#readSymbol()
+     * @see it.sevenbits.streams.InStream#readSymbol()
      */
     @Override
     public final char readSymbol() throws StreamException {
@@ -51,14 +53,14 @@ public class StringInStream implements InStream {
     }
 
     /**
-     * @see it.sevenbits.IStream.InStream#close()
+     * @see it.sevenbits.streams.InStream#close()
      */
     @Override
     public void close() throws StreamException {
     }
 
     /**
-     * @see it.sevenbits.IStream.InStream#isEnd()
+     * @see it.sevenbits.streams.InStream#isEnd()
      */
     @Override
     public final boolean isEnd() throws StreamException {

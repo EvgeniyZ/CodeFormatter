@@ -1,7 +1,7 @@
 package it.sevenbits.filestream;
 
 import it.sevenbits.exceptions.StreamException;
-import it.sevenbits.IStream.InStream;
+import it.sevenbits.streams.InStream;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ public class FileInStream implements InStream {
 
     /**
      * Input stream
-     * */
+     */
     private FileInputStream reader;
 
     /**
@@ -27,48 +27,48 @@ public class FileInStream implements InStream {
         try {
             reader = new FileInputStream(fileName);
         } catch (FileNotFoundException e) {
-            throw new StreamException("Cannot create file read stream. ");
+            throw new StreamException("\nCannot create file read stream. \n");
         }
     }
 
     /**
-     * @throws it.sevenbits.exceptions.StreamException
-     * @see it.sevenbits.IStream.InStream#readSymbol()
      * @return char
+     * @throws it.sevenbits.exceptions.StreamException
+     * @see it.sevenbits.streams.InStream#readSymbol()
      */
     @Override
     public final char readSymbol() throws StreamException {
         try {
             return (char) reader.read();
         } catch (IOException e) {
-            throw new StreamException("Problem to read from stream. ");
+            throw new StreamException("\nProblem to read from stream. \n");
         }
     }
 
     /**
-     * @throws it.sevenbits.exceptions.StreamException
-     * @see it.sevenbits.IStream.InStream#isEnd()
      * @return boolean
+     * @throws it.sevenbits.exceptions.StreamException
+     * @see it.sevenbits.streams.InStream#isEnd()
      */
     @Override
     public final boolean isEnd() throws StreamException {
         try {
             return reader.available() == 0;
         } catch (IOException e) {
-            throw new StreamException("Can't find end of file. ");
+            throw new StreamException("\nCan't find end of file. \n");
         }
     }
 
     /**
      * @throws it.sevenbits.exceptions.StreamException
-     * @see it.sevenbits.IStream.InStream#close()
+     * @see it.sevenbits.streams.InStream#close()
      */
     @Override
     public final void close() throws StreamException {
         try {
             reader.close();
         } catch (IOException e) {
-            throw new StreamException("Problem with closing stream. ");
+            throw new StreamException("\nProblem with closing stream. \n");
         }
     }
 }

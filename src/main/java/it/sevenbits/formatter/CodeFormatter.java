@@ -1,10 +1,10 @@
 package it.sevenbits.formatter;
 
-import it.sevenbits.IStream.InStream;
-import it.sevenbits.IStream.OutStream;
 import it.sevenbits.exceptions.FormatterException;
 import it.sevenbits.exceptions.NotEnoughBracketsException;
 import it.sevenbits.exceptions.StreamException;
+import it.sevenbits.streams.InStream;
+import it.sevenbits.streams.OutStream;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -81,9 +81,15 @@ public class CodeFormatter {
             destination.close();
             inputOpenBracketValidator(nestingLevel);
         } catch (StreamException e) {
-            throw new FormatterException(e.getMessage());
+            if (logger.isEnabledFor(Level.FATAL)) {
+                logger.fatal(e.getMessage());
+            }
+            throw new FormatterException(e);
         } catch (NotEnoughBracketsException e) {
-            throw new FormatterException(e.getMessage());
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(e.getMessage());
+            }
+            throw new FormatterException(e);
         }
     }
 
@@ -96,7 +102,7 @@ public class CodeFormatter {
      */
     private void inputCloseBracketValidator(final int nestingLevel) throws NotEnoughBracketsException {
         if (nestingLevel < 0) {
-            throw new NotEnoughBracketsException("Close brackets more then open brackets, invalid code on input stream. ");
+            throw new NotEnoughBracketsException("\nClose brackets more then open brackets, invalid code on input stream. \n");
         }
     }
 
@@ -109,7 +115,7 @@ public class CodeFormatter {
      */
     private void inputOpenBracketValidator(final int nestingLevel) throws NotEnoughBracketsException {
         if (nestingLevel > 0) {
-            throw new NotEnoughBracketsException("Open brackets more then close brackets, invalid code on input stream. ");
+            throw new NotEnoughBracketsException("\nOpen brackets more then close brackets, invalid code on input stream. \n");
         }
     }
 

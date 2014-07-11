@@ -1,4 +1,4 @@
-package it.sevenbits.IStream;
+package it.sevenbits.streams;
 
 import it.sevenbits.exceptions.StreamException;
 

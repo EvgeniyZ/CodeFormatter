@@ -1,4 +1,4 @@
-package it.sevenbits.IStream;
+package it.sevenbits.streams;
 
 import it.sevenbits.exceptions.StreamException;
 
@@ -10,7 +10,7 @@ public interface InStream {
      * Reads a symbol from stream
      *
      * @return char the next symbol code or -1 if stream out of data
-     * @throws it.sevenbits.exceptions.StreamException     *
+     * @throws it.sevenbits.exceptions.StreamException *
      */
     char readSymbol() throws StreamException;
 

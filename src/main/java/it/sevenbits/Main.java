@@ -43,8 +43,9 @@ public final class Main {
         try {
             formatOptions = new FormatOptions(DEFAULT_FORMATTER_PROPERTIES);
         } catch (StreamException ex) {
-            if (main.logger.isEnabledFor(Level.DEBUG))
+            if (main.logger.isEnabledFor(Level.DEBUG)) {
                 main.logger.debug("\nFormatter properties not found, working with default parameters");
+            }
             formatOptions = new FormatOptions();
         }
         if ((args.length > 2) || (args.length == 0)) {
