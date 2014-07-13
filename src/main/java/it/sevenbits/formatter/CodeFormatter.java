@@ -27,20 +27,24 @@ public class CodeFormatter {
      * @param destination   - Output stream, inclusive formatted code
      * @throws it.sevenbits.exceptions.FormatterException
      */
-    public final void format(final InStream source, final OutStream destination, final FormatOptions formatOptions) throws FormatterException {
+    public final void format(final InStream source,
+                             final OutStream destination,
+                             final FormatOptions formatOptions) throws FormatterException {
         boolean isNewString = false;
+        boolean isSpaceBetweenWords = false;
         boolean isAloneSpaceButton = false;
         int nestingLevel = 0;
-        char symbol;
+        char currentSymbol;
+        char previousSymbol = '\0';
         try {
             while (!source.isEnd()) {
                 if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug("Read symbol from stream. ");
                 }
-                symbol = source.readSymbol();
-                switch (symbol) {
+                currentSymbol = source.readSymbol();
+                switch (currentSymbol) {
                     case '{':
-                        destination.writeSymbol(symbol);
+                        destination.writeSymbol(currentSymbol);
                         isNewString = true;
                         nestingLevel++;
                         shiftNextString(destination, formatOptions, nestingLevel);
@@ -50,18 +54,29 @@ public class CodeFormatter {
                         nestingLevel--;
                         inputCloseBracketValidator(nestingLevel);
                         shiftNextString(destination, formatOptions, nestingLevel);
-                        destination.writeSymbol(symbol);
+                        destination.writeSymbol(currentSymbol);
                         break;
                     case ';':
-                        destination.writeSymbol(symbol);
+                        destination.writeSymbol(currentSymbol);
                         isNewString = true;
                         shiftNextString(destination, formatOptions, nestingLevel);
                         break;
                     case ' ':
                         if (!isNewString) {
+                            if ((previousSymbol != ' ') && (previousSymbol != '}') && (previousSymbol != ')')) {
+                                isSpaceBetweenWords = true;
+                                break;
+                            }
+                            if ((isSpaceBetweenWords) && (currentSymbol == '(')) {
+                                destination.writeSymbol(' ');
+                                break;
+                            }
+                            if (isSpaceBetweenWords) {
+                                break;
+                            }
                             if (isAloneSpaceButton) {
                                 isAloneSpaceButton = false;
-                                destination.writeSymbol(symbol);
+                                destination.writeSymbol(currentSymbol);
                             }
                             break;
                         }
@@ -70,12 +85,14 @@ public class CodeFormatter {
                     default:
                         isNewString = false;
                         isAloneSpaceButton = true;
-                        destination.writeSymbol(symbol);
+                        isSpaceBetweenWords = false;
+                        destination.writeSymbol(currentSymbol);
                         break;
                 }
                 if (logger.isEnabledFor(Level.DEBUG)) {
                     logger.debug("Symbol parsed. ");
                 }
+                previousSymbol = currentSymbol;
             }
             source.close();
             destination.close();
@@ -126,14 +143,16 @@ public class CodeFormatter {
      * @param formatOptions - format options for file
      * @param nestingLevel  - - code nesting level
      */
-    private void shiftNextString(final OutStream destination, final FormatOptions formatOptions, final int nestingLevel) throws FormatterException {
+    private void shiftNextString(final OutStream destination,
+                                 final FormatOptions formatOptions,
+                                 final int nestingLevel) throws FormatterException {
         try {
             destination.writeSymbol(formatOptions.getSymbolEndOfString());
             for (int i = 0; i < formatOptions.getIndent() * nestingLevel; i++) {
                 destination.writeSymbol(formatOptions.getTabSymbol());
             }
         } catch (StreamException e) {
-            throw new FormatterException(e.getMessage());
+            throw new FormatterException(e);
         }
     }
 }

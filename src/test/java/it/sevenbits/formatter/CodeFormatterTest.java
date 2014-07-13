@@ -57,15 +57,16 @@ public class CodeFormatterTest {
 
         formatter.format(inStream, outStream, formatOptions);
         Assert.assertEquals(outStream.getString(), expectedString);
-        if (logger.isEnabledFor(Level.DEBUG))
+        if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatEmptyString :" +
                     " Correct output with empty string.\n");
+        }
     }
 
     @Test
     public final void testFormatCorrectInput() throws Exception {
         CodeFormatter formatter = new CodeFormatter();
-        StringInStream inStream = new StringInStream("{abc}");
+        StringInStream inStream = new StringInStream("{      a                   b     c  }");
         StringOutStream outStream = new StringOutStream("");
         FormatOptions formatOptions = new FormatOptions();
         String expectedString = "{\n    abc\n}";
@@ -93,6 +94,22 @@ public class CodeFormatterTest {
                     "Correct output with current input string.\n");
         }
     }
+
+//    @Test
+//    public final void testFormatSignsOperations() throws Exception {
+//        CodeFormatter formatter = new CodeFormatter();
+//        StringInStream inStream = new StringInStream("a++;a* b*c/x");
+//        StringOutStream outStream = new StringOutStream("");
+//        FormatOptions formatOptions = new FormatOptions();
+//        String expectedString = "a;\n";
+//
+//        formatter.format(inStream, outStream, formatOptions);
+//        Assert.assertEquals(expectedString, outStream.getString());
+//        if (logger.isEnabledFor(Level.DEBUG)) {
+//            logger.debug("\ntestFormatSignsOperations : " +
+//                    "Correct output with current input string.\n");
+//        }
+//    }
 
     @Test
     public final void testFormatSomeCode() throws Exception {

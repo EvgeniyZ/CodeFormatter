@@ -1,6 +1,6 @@
 package it.sevenbits.formatter;
 
-import it.sevenbits.exceptions.StreamException;
+import it.sevenbits.exceptions.FormatterException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -46,7 +46,7 @@ public class FormatOptions {
      *
      * @param configName Name of file includes config parameters for formatter
      */
-    public FormatOptions(final String configName) throws StreamException {
+    public FormatOptions(final String configName) throws FormatterException {
         Logger logger = Logger.getLogger(FormatOptions.class.getName());
         Properties properties = new Properties();
         try {
@@ -55,13 +55,22 @@ public class FormatOptions {
             indentSize = Integer.parseInt(properties.getProperty("indentLength"));
             symbolEndOfString = '\n';
         } catch (FileNotFoundException ex) {
-            if (logger.isEnabledFor(Level.WARN))
-                logger.warn(ex.getMessage());
+            if (logger.isEnabledFor(Level.WARN)) {
+                logger.warn("Cannot find formatter.properties, run with default configuration. ");
+            }
             setDefaultParam();
-            throw new StreamException(ex.getMessage());
+            throw new FormatterException("Cannot find your formatter.properties, run with default configuration.");
         } catch (IOException ex) {
-            if (logger.isEnabledFor(Level.WARN))
+            if (logger.isEnabledFor(Level.WARN)) {
                 logger.warn(ex.getMessage());
+            }
+        } catch (NullPointerException ex) {
+            if (logger.isEnabledFor(Level.WARN)) {
+                logger.fatal("Cannot find parameters in formatter.properties. Run with formatter.properties");
+            }
+            setDefaultParam();
+            throw new FormatterException("Cannot find your parameters in formatter.properties, " +
+                    "run with default configuration.");
         }
     }
 

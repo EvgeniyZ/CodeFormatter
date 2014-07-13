@@ -44,14 +44,15 @@ public final class Main {
         FormatOptions formatOptions;
         try {
             formatOptions = new FormatOptions(DEFAULT_FORMATTER_PROPERTIES);
-        } catch (StreamException ex) {
+        } catch (FormatterException ex) {
             if (main.logger.isEnabledFor(Level.DEBUG)) {
-                main.logger.debug("\nFormatter properties not found, working with default parameters");
+                main.logger.debug("\nFormatter properties not found, run default parameters");
             }
+            System.out.println("Formatter properties not found, working with default parameters.");
             formatOptions = new FormatOptions();
         }
         if ((args.length > 2) || (args.length == 0)) {
-            main.logger.error("\nParameters: input_file_path output_file_path\n");
+            main.logger.error("\nParameters only: input_file_path output_file_path\n");
         }
         CodeFormatter codeFormatter = new CodeFormatter();
         if (args.length == 1) {
@@ -59,14 +60,17 @@ public final class Main {
                 fis = new FileInStream(args[0]);
                 fos = new FileOutStream(DEFAULT_OUTPUT_PATH);
                 codeFormatter.format(fis, fos, formatOptions);
+                System.out.println("Your code has been formatted in /yourproject/input file");
             } catch (StreamException ex) {
                 if (main.logger.isEnabledFor(Level.ERROR)) {
                     main.logger.error(ex.getMessage());
                 }
+                System.out.println("Can't format your file. Check the input properties.");
             } catch (FormatterException ex) {
                 if (main.logger.isEnabledFor(Level.ERROR)) {
                     main.logger.error(ex.getMessage());
                 }
+                System.out.println("Can't format your file. Are you sure that your code compiling?");
             }
         }
         if (args.length == 2) {
@@ -74,14 +78,17 @@ public final class Main {
                 fis = new FileInStream(args[0]);
                 fos = new FileOutStream(args[1]);
                 codeFormatter.format(fis, fos, formatOptions);
+                System.out.println("Your code has been formatted in your file output directory");
             } catch (StreamException ex) {
                 if (main.logger.isEnabledFor(Level.ERROR)) {
                     main.logger.error(ex.getMessage());
                 }
+                System.out.println("Can't format your file. Check the input properties.");
             } catch (FormatterException ex) {
                 if (main.logger.isEnabledFor(Level.ERROR)) {
                     main.logger.error(ex.getMessage());
                 }
+                System.out.println("Can't format your file. Are you sure that your code compiling?");
             }
         }
     }

@@ -13,17 +13,10 @@ public class FormatterException extends Exception {
     }
 
     /**
-     * Creates formatter exception from stream exception
+     * Creates formatter exception from another exception
      */
-    public FormatterException(final StreamException ex) {
-        super(ex.getMessage());
-    }
-
-    /**
-     * Creates formatter exception from stream exception
-     */
-    public FormatterException(final NotEnoughBracketsException ex) {
-        super(ex.getMessage());
+    public FormatterException(final Throwable cause) {
+        super(cause);
     }
 
     /**
