@@ -43,8 +43,6 @@ public class CodeFormatter {
      * @param destination   - Output stream, inclusive formatted code
      * @throws it.sevenbits.exceptions.FormatterException
      */
-
-    //TODO FIX PROBLEM WITH SPACES BETWEEN IF () ELSE {
     public final void format(
         final InStream source, final OutStream destination, final FormatOptions formatOptions
     ) throws FormatterException {
@@ -78,13 +76,15 @@ public class CodeFormatter {
                     logger.debug("Read symbol from stream. ");
                 }
                 currentSymbol = source.readSymbol();
-                if ((closedBracketFinded) || (currentSymbol == ' ') || (currentSymbol == '\t')
-                    || (currentSymbol == symbolEndOfString)) {
+                if ((closedBracketFinded) && ((currentSymbol == ' ') || (currentSymbol == '\t')
+                    || (currentSymbol == symbolEndOfString))) {
                     isShiftingSymbol = true;
                 }
                 if ((closedBracketFinded) && notShiftingSymbol(currentSymbol, symbolEndOfString)) {
                     destination.writeSymbol('}');
-                    destination.writeSymbol(indentSymbol);
+                    if (currentSymbol != '}') {
+                        destination.writeSymbol(indentSymbol);
+                    }
                     closedBracketFinded = false;
                     isShiftingSymbol = false;
                 } else if ((closedBracketFinded) && (!isShiftingSymbol)) {
@@ -223,7 +223,15 @@ public class CodeFormatter {
         }
     }
 
-    private boolean notShiftingSymbol(char currentSymbol, char symbolEndOfString) {
+    /**
+     * Check current symbol from input stream on shifting, true if it's indent symbol, else false
+     *
+     * @param currentSymbol     - current symbol from input stream
+     * @param symbolEndOfString - selected symbol end of string (getting from formatter.properties
+     *                          or from default parameters)
+     * @return boolean
+     */
+    private boolean notShiftingSymbol(final char currentSymbol, final char symbolEndOfString) {
         return ((currentSymbol != ' ') && (currentSymbol != '\t') && (currentSymbol != symbolEndOfString));
     }
 }

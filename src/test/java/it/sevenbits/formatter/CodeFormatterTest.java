@@ -29,7 +29,7 @@ public class CodeFormatterTest {
         formatter.format(inStream, outStream, formatOptions);
         if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatNullInput : " +
-                    "We try to read from null string and catch exception - cool.\n");
+                "We try to read from null string and catch exception - cool.\n");
         }
     }
 
@@ -43,7 +43,7 @@ public class CodeFormatterTest {
         formatter.format(inStream, outStream, formatOptions);
         if (logger.isEnabledFor(Level.FATAL)) {
             logger.fatal("\ntestFormatNullInput : " +
-                    "We can't read from null string, but we did it.\n");
+                "We can't read from null string, but we did it.\n");
         }
     }
 
@@ -59,7 +59,7 @@ public class CodeFormatterTest {
         Assert.assertEquals(outStream.getString(), expectedString);
         if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatEmptyString :" +
-                    " Correct output with empty string.\n");
+                " Correct output with empty string.\n");
         }
     }
 
@@ -75,7 +75,7 @@ public class CodeFormatterTest {
         Assert.assertEquals(expectedString, outStream.getString());
         if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatCorrectInput :" +
-                    " Correct output with this current string.\n");
+                " Correct output with this current string.\n");
         }
     }
 
@@ -91,7 +91,7 @@ public class CodeFormatterTest {
         Assert.assertEquals(expectedString, outStream.getString());
         if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatPointComma : " +
-                    "Correct output with current input string.\n");
+                "Correct output with current input string.\n");
         }
     }
 
@@ -118,16 +118,16 @@ public class CodeFormatterTest {
         StringOutStream outStream = new StringOutStream("");
         FormatOptions formatOptions = new FormatOptions();
         String expectedString = "{\n" +
-                "    do() {\n" +
-                "        while()\n" +
-                "    }\n" +
-                "}";
+            "    do() {\n" +
+            "        while()\n" +
+            "    }\n" +
+            "}";
 
         formatter.format(inStream, outStream, formatOptions);
         Assert.assertEquals(expectedString, outStream.getString());
         if (logger.isEnabledFor(Level.DEBUG)) {
             logger.debug("\ntestFormatSomeCode : " +
-                    "Correct output with current input string.\n");
+                "Correct output with current input string.\n");
         }
     }
 }
