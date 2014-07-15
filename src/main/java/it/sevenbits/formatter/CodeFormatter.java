@@ -19,6 +19,22 @@ public class CodeFormatter {
     private Logger logger = Logger.getLogger(CodeFormatter.class);
 
     /**
+     * Default tabulation symbol in output file. \t or space supported.
+     */
+    public static final char INDENT_SYMBOL = ' ';
+
+    /**
+     * End of string symbol in output file \n.
+     */
+    public static final char SYMBOL_END_OF_STRING = '\n';
+
+    /**
+     * Standard indent size for tabulation if configuration don't entered.
+     */
+    public static final int INDENT_SIZE = 4;
+
+
+    /**
      * Formats code from source stream and saving formatted code
      * in destination stream.
      *
@@ -27,12 +43,32 @@ public class CodeFormatter {
      * @param destination   - Output stream, inclusive formatted code
      * @throws it.sevenbits.exceptions.FormatterException
      */
-    public final void format(final InStream source,
-                             final OutStream destination,
-                             final FormatOptions formatOptions) throws FormatterException {
+
+    //TODO FIX PROBLEM WITH SPACES BETWEEN IF () ELSE {
+    public final void format(
+        final InStream source, final OutStream destination, final FormatOptions formatOptions
+    ) throws FormatterException {
+        char symbolEndOfString;
+        char indentSymbol;
+        int indentSize;
+        if (formatOptions == null) {
+            if (logger.isEnabledFor(Level.WARN)) {
+                logger.warn("Null format options find, using default parameters");
+            }
+            symbolEndOfString = SYMBOL_END_OF_STRING;
+            indentSymbol = INDENT_SYMBOL;
+            indentSize = INDENT_SIZE;
+        } else {
+            symbolEndOfString = formatOptions.getSymbolEndOfString();
+            indentSymbol = formatOptions.getTabSymbol();
+            indentSize = formatOptions.getIndent();
+        }
+        boolean isShifting = false;
         boolean isNewString = false;
         boolean isSpaceBetweenWords = false;
         boolean isAloneSpaceButton = false;
+        boolean closedBracketFinded = false;
+        boolean isShiftingSymbol = false;
         int nestingLevel = 0;
         char currentSymbol;
         char previousSymbol = '\0';
@@ -42,24 +78,50 @@ public class CodeFormatter {
                     logger.debug("Read symbol from stream. ");
                 }
                 currentSymbol = source.readSymbol();
+                if ((closedBracketFinded) || (currentSymbol == ' ') || (currentSymbol == '\t')
+                    || (currentSymbol == symbolEndOfString)) {
+                    isShiftingSymbol = true;
+                }
+                if ((closedBracketFinded) && notShiftingSymbol(currentSymbol, symbolEndOfString)) {
+                    destination.writeSymbol('}');
+                    destination.writeSymbol(indentSymbol);
+                    closedBracketFinded = false;
+                    isShiftingSymbol = false;
+                } else if ((closedBracketFinded) && (!isShiftingSymbol)) {
+                    destination.writeSymbol(previousSymbol);
+                    closedBracketFinded = false;
+                }
+                if ((isShifting) && (currentSymbol == '}')) {
+                    isShifting = false;
+                } else if ((isShifting) && notShiftingSymbol(currentSymbol, symbolEndOfString)) {
+                    destination.writeSymbol(formatOptions.getSymbolEndOfString());
+                    shiftNextString(destination, indentSymbol, indentSize, nestingLevel);
+                    isShifting = false;
+                }
                 switch (currentSymbol) {
                     case '{':
-                        destination.writeSymbol(currentSymbol);
+                        if ((previousSymbol != ' ') && (previousSymbol != '\0') && (previousSymbol != '{')) {
+                            destination.writeSymbol(indentSymbol);
+                            destination.writeSymbol(currentSymbol);
+                        } else {
+                            destination.writeSymbol(currentSymbol);
+                        }
                         isNewString = true;
                         nestingLevel++;
-                        shiftNextString(destination, formatOptions, nestingLevel);
+                        destination.writeSymbol(symbolEndOfString);
+                        shiftNextString(destination, indentSymbol, indentSize, nestingLevel);
                         break;
                     case '}':
                         isNewString = true;
                         nestingLevel--;
                         inputCloseBracketValidator(nestingLevel);
-                        shiftNextString(destination, formatOptions, nestingLevel);
-                        destination.writeSymbol(currentSymbol);
+                        destination.writeSymbol(symbolEndOfString);
+                        shiftNextString(destination, indentSymbol, indentSize, nestingLevel);
+                        closedBracketFinded = true;
                         break;
                     case ';':
                         destination.writeSymbol(currentSymbol);
-                        isNewString = true;
-                        shiftNextString(destination, formatOptions, nestingLevel);
+                        isShifting = true;
                         break;
                     case ' ':
                         if (!isNewString) {
@@ -93,6 +155,12 @@ public class CodeFormatter {
                     logger.debug("Symbol parsed. ");
                 }
                 previousSymbol = currentSymbol;
+            }
+            if (isShifting) {
+                destination.writeSymbol(symbolEndOfString);
+            }
+            if (closedBracketFinded) {
+                destination.writeSymbol('}');
             }
             source.close();
             destination.close();
@@ -139,20 +207,23 @@ public class CodeFormatter {
     /**
      * Formats code after founding bracket
      *
-     * @param destination   - Output stream, inclusive formatted code
-     * @param formatOptions - format options for file
-     * @param nestingLevel  - - code nesting level
+     * @param destination  - Output stream, inclusive formatted code
+     * @param indentSymbol - format options for file
+     * @param nestingLevel - - code nesting level
      */
-    private void shiftNextString(final OutStream destination,
-                                 final FormatOptions formatOptions,
-                                 final int nestingLevel) throws FormatterException {
+    private void shiftNextString(
+        final OutStream destination, final char indentSymbol, final int indentSize, final int nestingLevel
+    ) throws FormatterException {
         try {
-            destination.writeSymbol(formatOptions.getSymbolEndOfString());
-            for (int i = 0; i < formatOptions.getIndent() * nestingLevel; i++) {
-                destination.writeSymbol(formatOptions.getTabSymbol());
+            for (int i = 0; i < indentSize * nestingLevel; i++) {
+                destination.writeSymbol(indentSymbol);
             }
         } catch (StreamException e) {
             throw new FormatterException(e);
         }
+    }
+
+    private boolean notShiftingSymbol(char currentSymbol, char symbolEndOfString) {
+        return ((currentSymbol != ' ') && (currentSymbol != '\t') && (currentSymbol != symbolEndOfString));
     }
 }

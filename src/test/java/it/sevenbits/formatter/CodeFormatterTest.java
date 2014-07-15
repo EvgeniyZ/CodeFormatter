@@ -114,7 +114,7 @@ public class CodeFormatterTest {
     @Test
     public final void testFormatSomeCode() throws Exception {
         CodeFormatter formatter = new CodeFormatter();
-        StringInStream inStream = new StringInStream("{do()                     {while()}          }\n\n\n\n");
+        StringInStream inStream = new StringInStream("{do(){while()}          }\n\n\n\n");
         StringOutStream outStream = new StringOutStream("");
         FormatOptions formatOptions = new FormatOptions();
         String expectedString = "{\n" +

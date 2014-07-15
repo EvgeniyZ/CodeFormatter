@@ -32,7 +32,7 @@ public class FormatOptions {
     /**
      * Standard indent size for tabulation if configuration don't entered
      */
-    private static final int STANDARD_INDENT_SIZE = 4;
+    public static final int INDENT_SIZE = 4;
 
     /**
      * Default parameters for formatter
@@ -55,18 +55,18 @@ public class FormatOptions {
             indentSize = Integer.parseInt(properties.getProperty("indentLength"));
             symbolEndOfString = '\n';
         } catch (FileNotFoundException ex) {
-            if (logger.isEnabledFor(Level.WARN)) {
-                logger.warn("Cannot find formatter.properties, run with default configuration. ");
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Cannot find formatter.properties, run with default configuration. ");
             }
             setDefaultParam();
             throw new FormatterException("Cannot find your formatter.properties, run with default configuration.");
         } catch (IOException ex) {
-            if (logger.isEnabledFor(Level.WARN)) {
-                logger.warn(ex.getMessage());
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error(ex.getMessage());
             }
         } catch (NullPointerException ex) {
-            if (logger.isEnabledFor(Level.WARN)) {
-                logger.fatal("Cannot find parameters in formatter.properties. Run with formatter.properties");
+            if (logger.isEnabledFor(Level.ERROR)) {
+                logger.error("Cannot find parameters in formatter.properties. Run with formatter.properties");
             }
             setDefaultParam();
             throw new FormatterException("Cannot find your parameters in formatter.properties, " +
@@ -105,7 +105,7 @@ public class FormatOptions {
      * Default parameters for formatter
      */
     private void setDefaultParam() {
-        indentSize = STANDARD_INDENT_SIZE;
+        indentSize = INDENT_SIZE;
         symbolEndOfString = '\n';
         tabSymbol = ' ';
     }
